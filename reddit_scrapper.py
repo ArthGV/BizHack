@@ -7,7 +7,24 @@ reddit = praw.Reddit(
     user_agent="brand_scraper_v1"
 )
 
+def get_subreddit_posts(subreddit, limit=500):
+    """
+    Get subreddit post from a subreddit
+    """
+    posts = []
+    for submission in reddit.subreddit(subreddit).new(limit=limit):
+        posts.append({
+            "title": submission.title,
+            "selftext": submission.selftext,
+            "created_utc": submission.created_utc,
+            "score": submission.score
+        })
+    return pd.DataFrame(posts)
+
 def get_brand_posts(brand, subreddit="MakeupAddiction", limit=100):
+    """
+    Get subreddit post from a subreddit related to a specific brand
+    """
     posts = []
     for submission in reddit.subreddit(subreddit).search(brand, limit=limit):
         posts.append({
